@@ -94,8 +94,7 @@ namespace Net.Brotherus.SeikkailuLaakso
 
             new Application().Run(new Peli());
 
-            //var peli = new Peli();
-            //peli.PlayGame_Click(null, null);
+            //new Peli().PlayGame_Click(null, null);
         }
 
         private static PngBitmapEncoder RenderToBitmap(FrameworkElement sceneItem)

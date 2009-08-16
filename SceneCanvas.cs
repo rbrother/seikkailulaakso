@@ -22,7 +22,7 @@ namespace Net.Brotherus.SeikkailuLaakso
         private List<Point> objectPoints;
         private List<Line> tempLines;
 
-        private const double POLYGON_SIDE = 40.0;
+        private const double POLYGON_SIDE = 25.0;
 
         public SceneCanvas()
         {

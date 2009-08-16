@@ -35,7 +35,6 @@ namespace Net.Brotherus
             _geom = GeomFactory.Instance.CreateCircleGeom(physicsSimulator, _body, radius, 32);
             _geom.RestitutionCoefficient = 0.0f;
             _geom.FrictionCoefficient = 1.0f;
-            _geom.CollisionGroup = 1;
             _geom.CollisionCategories = CollisionCategory.All;
             _geom.CollidesWith = CollisionCategory.All;
             this.Color = Color.Yellow;

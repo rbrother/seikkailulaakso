@@ -42,7 +42,6 @@ namespace Net.Brotherus
             _geom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _body, width, height, Vector2.Zero /*offset*/, 0 /*rotation offset*/);
             _geom.RestitutionCoefficient = 0.0f;
             _geom.FrictionCoefficient = 1.0f;
-            _geom.CollisionGroup = 1;
             _geom.CollisionCategories = CollisionCategory.All;
             _geom.CollidesWith = CollisionCategory.All;
             this.Color = Color.Yellow;
@@ -65,6 +64,8 @@ namespace Net.Brotherus
         public bool IsStatic { set { _body.IsStatic = value; } }
 
         public int CollisionGroup { set { _geom.CollisionGroup = value; } }
+
+        public CollisionCategory CollisionCategories { set { _geom.CollisionCategories = value; } }
 
         public float RotationDeg 
         {

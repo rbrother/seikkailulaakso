@@ -48,7 +48,7 @@ namespace Net.Brotherus
             // Load content belonging to the screen manager.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _lineBrush.Load(GraphicsDevice);
-            _ukkeli = new Ukkeli(new Vector2(500, 400), GraphicsDevice, _physicsSimulator);
+            _ukkeli = new Ukkeli(new Vector2(150, 800), GraphicsDevice, _physicsSimulator);
             foreach (var obstacle in _obstacles)
             {                
                 obstacle.Load(GraphicsDevice, _physicsSimulator);
