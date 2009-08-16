@@ -1,0 +1,24 @@
+﻿<Window x:Class="Net.Brotherus.SeikkailuLaakso.Peli"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:L="clr-namespace:Net.Brotherus.SeikkailuLaakso"	    
+    Title="Peli" Height="880" Width="1000" WindowState="Maximized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>            
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="_Game">
+                <MenuItem Header="_Save" Click="MenuItem_Click"/>
+                <MenuItem Header="_Play" Click="PlayGame_Click"/> 
+            </MenuItem>            
+        </Menu>
+        <ScrollViewer Grid.Row="1" Name="view" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+            <L:SceneCanvas Width="6000" Height="1200" Background="White"/>
+        </ScrollViewer>
+    </Grid>
+</Window>

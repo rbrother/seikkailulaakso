@@ -1,0 +1,78 @@
+﻿<Window x:Class="Net.Brotherus.SeikkailuLaakso.UkkelinMuokkaus"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="UkkelinMuokkaus" Width="1024" Height="1100">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="0" Grid.Column="0" Name="ukonKuva" Width="800" Height="600">
+            <Image Name="TakanaPic"/>
+            <Image Source="pack://application:,,,/ukkelit/perus.png"/>
+            <Image Name="KengatPic"/>
+            <Image Name="AlaosaPic"/>
+            <Image Name="YlaosaPic"/>
+            <Image Name="PaaPic"/>
+            <Image Name="KasvotPic"/>
+        </Canvas>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.ColumnSpan="2" FontWeight="Bold">Vaatteet</Label>
+            <Label Grid.Row="1">Päässä</Label>
+            <ComboBox Grid.Row="1" Grid.Column="1" Name="VaatteetPaa" SelectionChanged="VaatteetPaa_SelectionChanged" >
+                <ComboBoxItem IsSelected="True">Ei mitään</ComboBoxItem>
+                <ComboBoxItem>Hattu</ComboBoxItem>
+                <ComboBoxItem>Lippis</ComboBoxItem>
+            </ComboBox>
+            <Label Grid.Row="2">Yläosassa</Label>
+            <ComboBox Grid.Row="2" Grid.Column="1" Name="VaatteetYla" SelectionChanged="VaatteetYla_SelectionChanged">
+                <ComboBoxItem IsSelected="True">Ei mitään</ComboBoxItem>
+                <ComboBoxItem>Paita</ComboBoxItem>
+            </ComboBox>
+            <Label Grid.Row="3">Alaosa</Label>
+            <ComboBox Grid.Row="3" Grid.Column="1" Name="VaatteetAla" SelectionChanged="VaatteetAla_SelectionChanged">
+                <ComboBoxItem IsSelected="True">Ei mitään</ComboBoxItem>
+                <ComboBoxItem>Mekko</ComboBoxItem>
+                <ComboBoxItem>Housut</ComboBoxItem>
+            </ComboBox>
+            <Label Grid.Row="4">Jaloissa</Label>
+            <ComboBox Grid.Row="4" Grid.Column="1" Name="Jalassa" SelectionChanged="Jalassa_SelectionChanged">
+                <ComboBoxItem IsSelected="True">Ei mitään</ComboBoxItem>
+                <ComboBoxItem>Saappaat</ComboBoxItem>
+            </ComboBox>
+            <Label Grid.Row="5">Takana</Label>
+            <ComboBox Grid.Row="5" Grid.Column="1" Name="Takana" SelectionChanged="Takana_SelectionChanged">
+                <ComboBoxItem IsSelected="True">Ei mitään</ComboBoxItem>
+                <ComboBoxItem>Viitta</ComboBoxItem>
+            </ComboBox>
+            <Label Grid.Row="6">Kasvot</Label>
+            <ComboBox Grid.Row="6" Grid.Column="1" Name="Kasvot" SelectionChanged="Kasvot_SelectionChanged">
+                <ComboBoxItem IsSelected="True">Ei mitään</ComboBoxItem>
+                <ComboBoxItem>Kasvot1</ComboBoxItem>
+                <ComboBoxItem>Kasvot2</ComboBoxItem>
+                <ComboBoxItem>Iloinen</ComboBoxItem>
+            </ComboBox>
+
+        </Grid>
+        
+    </Grid>
+</Window>
