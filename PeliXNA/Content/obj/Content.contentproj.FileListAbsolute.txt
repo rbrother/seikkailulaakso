@@ -1,6 +1,0 @@
-D:\Projects\Private Farseer\Farseer Physics 2.0.1\FarseerPhysics2.0.1SimpleSamplesForXNA\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-D:\Projects\Private Farseer\Farseer Physics 2.0.1\Zips\FarseerPhysics2.0.1SimpleSamplesForXNA\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Genbox\Desktop\FarseerPhysics2.0.1SimpleSamplesForXNA\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-E:\programming\PhysicsEngines\FarseerPhysics2.0.1SimpleSamplesForXNA\SimpleSamplesXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-E:\programming\SeikkailuLaakso\PeliXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-F:\programming\SeikkailuLaakso\PeliXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
