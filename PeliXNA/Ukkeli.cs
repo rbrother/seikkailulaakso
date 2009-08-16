@@ -47,9 +47,12 @@ namespace Net.Brotherus
             JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _torso.Body, _feet.Body, position + new Vector2(0, 32));
 
             // Top
-            var connectorSize = new Vector2(8, 26);
-            var connectorMass = 0.5f;
             _top = new RectangleBodyGeom(position + new Vector2(0, -112), 32, 32, 2, _graphicsDevice, _physicsSimulator) { CollisionGroup = 2 };
+            // Top-Torso
+            JointFactory.Instance.CreateAngleJoint(physicsSimulator, _torso.Body, _top.Body);
+
+            var connectorSize = new Vector2(10, 32);
+            var connectorMass = 0.5f;            
             _connectors = new RectangleBodyGeom[] {
                 new RectangleBodyGeom(position + new Vector2(-16,-80), connectorSize, connectorMass, graphicsDevice, physicsSimulator) { CollisionGroup = 1 },
                 new RectangleBodyGeom(position + new Vector2(16,-80), connectorSize, connectorMass, graphicsDevice, physicsSimulator) { CollisionGroup = 1 },
@@ -64,12 +67,6 @@ namespace Net.Brotherus
                 JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _connectors[2].Body, _torso.Body, position + new Vector2(-16, -32)),
                 JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _connectors[3].Body, _torso.Body, position + new Vector2(16, -32))
             };
-            foreach (var j in _joints)
-            {
-                j.Softness = 0.0f;
-                j.BiasFactor = 0.5f; // Correct more strongly
-            }
-
             _springs = new AngleJoint[] {
                 JointFactory.Instance.CreateAngleJoint(physicsSimulator, _top.Body, _connectors[0].Body),
                 JointFactory.Instance.CreateAngleJoint(physicsSimulator, _top.Body, _connectors[1].Body),
@@ -78,6 +75,10 @@ namespace Net.Brotherus
                 JointFactory.Instance.CreateAngleJoint(physicsSimulator, _connectors[2].Body, _torso.Body),
                 JointFactory.Instance.CreateAngleJoint(physicsSimulator, _connectors[3].Body, _torso.Body)
             };
+            // Extra parallel-angle joints for symmetry
+            JointFactory.Instance.CreateAngleJoint(physicsSimulator, _connectors[0].Body, _connectors[3].Body).Softness = 0.5f;
+            JointFactory.Instance.CreateAngleJoint(physicsSimulator, _connectors[1].Body, _connectors[2].Body).Softness = 0.5f;
+
 
             DoBounce = false;
         }
@@ -89,6 +90,7 @@ namespace Net.Brotherus
                 foreach (var spring in _springs)
                 {
                     spring.MaxImpulse = value;
+                    spring.BiasFactor = 0.5f; // Larger bias
                 }
             }
         }
@@ -99,13 +101,13 @@ namespace Net.Brotherus
             {
                 if (value)
                 {
-                    BounceAngle = 10;
-                    MaxConnectorImpulse = 1000.0f;
+                    BounceAngle = 0;
+                    MaxConnectorImpulse = 2000.0f;
                 }
                 else
                 {
-                    BounceAngle = 80;
-                    MaxConnectorImpulse = 100.0f; // Less "bouncy" fall to ground
+                    BounceAngle = 75;
+                    MaxConnectorImpulse = 60.0f; // Less "bouncy" fall to ground
                 }
             }
         }
@@ -144,14 +146,8 @@ namespace Net.Brotherus
             }
             else // decelerate from walking
             {
-                if (_feet.Body.AngularVelocity > 0.1f)
-                {
-                    _feet.Body.ApplyTorque(-TORQUE);
-                }
-                else if (_feet.Body.AngularVelocity < -0.1f)
-                {
-                    _feet.Body.ApplyTorque(TORQUE);
-                }
+                var mult = Math.Max(Math.Min(_feet.Body.AngularVelocity, 1.0f), -1.0f);
+                _feet.Body.ApplyTorque(-TORQUE * mult);
             }
             // jumping
             if (input.IsNewKeyPress(Keys.LeftShift))
@@ -164,7 +160,7 @@ namespace Net.Brotherus
             }
         }
 
-        private float TORQUE = 60000f;
+        private float TORQUE = 30000f;
 
         private float MAX_WALK_ANGULAR_SPEED = 8.0f;
 
