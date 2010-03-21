@@ -29,7 +29,7 @@ namespace Net.Brotherus
 
             _graphics.PreferredBackBufferWidth = GameScreen.ScreenSize.X;
             _graphics.PreferredBackBufferHeight = GameScreen.ScreenSize.Y;
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
 
             IsMouseVisible = false;
 
