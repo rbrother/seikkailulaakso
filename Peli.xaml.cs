@@ -65,13 +65,7 @@ namespace Net.Brotherus.SeikkailuLaakso
             get { return Path.Combine(SaveDir, "SeikkailuMaaRata.xml"); }
         }
 
-        private string SaveDir
-        {
-            get 
-            { 
-                return Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "SeikkailuMaa"); 
-            }
-        }
+        private string SaveDir { get { return "Radat"; } }
 
         public void StartGame() {
             using (var game = new SeikkailuLaaksoGame()) {
