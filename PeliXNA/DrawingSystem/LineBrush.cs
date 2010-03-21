@@ -1,6 +1,7 @@
 using FarseerGames.FarseerPhysics.Mathematics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace FarseerGames.GettingStarted.DrawingSystem
 {

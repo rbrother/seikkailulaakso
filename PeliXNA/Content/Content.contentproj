@@ -43,28 +43,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\background.png">
-      <Name>background</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Common\blank.png">
-      <Name>blank</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Common\gradient.png">
-      <Name>gradient</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Common\logo.png">
-      <Name>logo</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Fonts\detailsFont.spritefont">
       <Name>detailsFont</Name>
       <Importer>FontDescriptionImporter</Importer>

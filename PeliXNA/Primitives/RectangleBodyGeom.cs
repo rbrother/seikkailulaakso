@@ -10,12 +10,14 @@ using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.GettingStarted.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2Fs = FarseerGames.FarseerPhysics.Mathematics.Vector2;
+using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus
 {
     public class RectangleBodyGeom
     {
-        private Vector2 _origin;
+        private Vector2Xna _origin;
         private Body _body;
         private Geom _geom;
         private Texture2D _texture;
@@ -24,12 +26,12 @@ namespace Net.Brotherus
         private readonly int _width;
         private readonly int _height;
 
-        public RectangleBodyGeom(Vector2 position, Vector2 size, float mass, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator) :
+        public RectangleBodyGeom(Vector2Fs position, Vector2Fs size, float mass, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator) :
             this(position, (int) size.X, (int) size.Y, mass, graphicsDevice, physicsSimulator)
         {
         }
 
-        public RectangleBodyGeom(Vector2 position, int width, int height, float mass, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
+        public RectangleBodyGeom(Vector2Fs position, int width, int height, float mass, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _graphicsDevice = graphicsDevice;
             _physicsSimulator = physicsSimulator;
@@ -39,7 +41,7 @@ namespace Net.Brotherus
             _origin = new Vector2(width * 0.5f, height * 0.5f);
             _body = BodyFactory.Instance.CreateRectangleBody(physicsSimulator, width, height, mass);
             _body.Position = position;
-            _geom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _body, width, height, Vector2.Zero /*offset*/, 0 /*rotation offset*/);
+            _geom = GeomFactory.Instance.CreateRectangleGeom(physicsSimulator, _body, width, height, Vector2Fs.Zero /*offset*/, 0 /*rotation offset*/);
             _geom.RestitutionCoefficient = 0.0f;
             _geom.FrictionCoefficient = 1.0f;
             _geom.CollisionCategories = CollisionCategory.All;
@@ -57,7 +59,7 @@ namespace Net.Brotherus
 
         public Geom Geom { get { return _geom; } }
 
-        public Vector2 Position { get { return _body.Position; } }
+        public Vector2Fs Position { get { return _body.Position; } }
 
         public float Rotation { get { return _body.Rotation; } }
 
@@ -69,8 +71,8 @@ namespace Net.Brotherus
 
         public float RotationDeg 
         {
-            get { return (float) MathExt.ToDegrees(_body.Rotation);  }
-            set { _body.Rotation = MathExt.ToRadians(value); } 
+            get { return (float) _body.Rotation.ToDegrees();  }
+            set { _body.Rotation = value.ToRadians(); } 
         }
 
         public float RotationRad { get { return _body.Rotation; } }
@@ -83,7 +85,7 @@ namespace Net.Brotherus
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _body.Position, null, Color.White, _body.Rotation, _origin, 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(_texture, _body.Position.ToVector2Xna(), null, Color.White, _body.Rotation, _origin, 1, SpriteEffects.None, 0);
         }
 
         internal AngleJoint CreateAngleJoint(PhysicsSimulator _physicsSimulator, RectangleBodyGeom b, float targetAngle)
@@ -95,7 +97,7 @@ namespace Net.Brotherus
             return joint;
         }
 
-        internal RevoluteJoint CreateRevoluteJoint(PhysicsSimulator physicsSimulator, RectangleBodyGeom b, Vector2 relativeAnchorPosition)
+        internal RevoluteJoint CreateRevoluteJoint(PhysicsSimulator physicsSimulator, RectangleBodyGeom b, Vector2Fs relativeAnchorPosition)
         {
             return JointFactory.Instance.CreateRevoluteJoint(physicsSimulator, _body, b._body, _body.Position + relativeAnchorPosition);
         }

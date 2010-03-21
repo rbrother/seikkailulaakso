@@ -26,6 +26,10 @@ namespace Net.Brotherus.SeikkailuLaakso
 
         private void Aloitetaan(object sender, RoutedEventArgs e)
         {
+            new Peli().Show();
+        }
+
+        private void UkkelinMuokkaus(object sender, RoutedEventArgs e) {
             new UkkelinMuokkaus().Show();
         }
     }

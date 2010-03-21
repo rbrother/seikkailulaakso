@@ -10,23 +10,32 @@ using FarseerGames.FarseerPhysics.Dynamics.Springs;
 using FarseerGames.FarseerPhysics.Factories;
 using FarseerGames.GettingStarted.DrawingSystem;
 using Net.Brotherus.SeikkailuLaakso;
+using Vector2Fs = FarseerGames.FarseerPhysics.Mathematics.Vector2;
+using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus
 {
     public class GameScreen : DrawableGameComponent
     {
-        private static readonly Vector2 GRAVITY = new Vector2(0, 1000);
+        private float _scrollPosition = 0.0f;
+        private float _scrollSpeed = 0.0f;
+
+
+        public static Point ScreenSize = new Point(1600, 1200);
+        private static readonly float SCROLL_MARGIN = 400.0f;
+
+        private static readonly Vector2Fs GRAVITY = new Vector2Fs(0, 1000);
         private PhysicsSimulator _physicsSimulator;
         private ContentManager _contentManager;
         private SpriteBatch _spriteBatch;
         private InputState _input = new InputState();
 
-        private Ukkeli _ukkeli;
+        private UkkeliSimple _ukkeli;
         private List<PolygonObstacle> _obstacles;
 
         private LineBrush _lineBrush = new LineBrush(1, Color.Black); //used to draw spring on mouse grab
-        private FixedLinearSpring _mousePickSpring;
-        private Geom _pickedGeom;
+
+        private Texture2D _background;
 
         public GameScreen(Game game) : base(game)
         {
@@ -35,7 +44,7 @@ namespace Net.Brotherus
             _obstacles = new List<PolygonObstacle>();
         }
 
-        public void AddObstacle(string picFile, Vector2 position)
+        public void AddObstacle(string picFile, Vector2Fs position)
         {
              _obstacles.Add(new PolygonObstacle(position, picFile));
         }
@@ -46,9 +55,10 @@ namespace Net.Brotherus
         protected override void LoadContent()
         {
             // Load content belonging to the screen manager.
+            _background = Texture2D.FromFile(GraphicsDevice, "Content/taustakuvat/berkin_talo.png");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _lineBrush.Load(GraphicsDevice);
-            _ukkeli = new Ukkeli(new Vector2(150, 800), GraphicsDevice, _physicsSimulator);
+            _ukkeli = new UkkeliSimple(new Vector2Fs(150, 800), GraphicsDevice, _physicsSimulator);
             foreach (var obstacle in _obstacles)
             {                
                 obstacle.Load(GraphicsDevice, _physicsSimulator);
@@ -58,77 +68,59 @@ namespace Net.Brotherus
         /// <summary>
         /// Unload your graphics content.
         /// </summary>
-        protected override void UnloadContent()
-        {
+        protected override void UnloadContent() {
             _contentManager.Unload();
             _physicsSimulator.Clear();
         }
 
-        public override void Update(GameTime gameTime)
-        {
+        public override void Update(GameTime gameTime) {
             // Read the keyboard and gamepad.
             _input.Update();
             float secondsElapsed = gameTime.ElapsedGameTime.Milliseconds * .001f;
             _physicsSimulator.Update(secondsElapsed);
             _ukkeli.HandleKeyboardInput(_input, gameTime);
-            HandleMouseInput(_input);
+            Scroll(secondsElapsed);
         }
 
-        private void HandleMouseInput(InputState input)
-        {
-            Vector2 point = new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y);
-            if (input.LastMouseState.LeftButton == ButtonState.Released &&
-                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                CreateMouseSpring(point);
+        private void Scroll(float secondsElapsed) {
+            if (ManOnScreenX > ScreenSize.X - SCROLL_MARGIN) {
+                _scrollSpeed += secondsElapsed;
+            } else if (ManOnScreenX < SCROLL_MARGIN) {
+                _scrollSpeed -= secondsElapsed;
+            } else if (Math.Abs(_scrollSpeed) < 0.1f ) {
+                _scrollSpeed = 0.0f;
+            } else {
+                _scrollSpeed -= Math.Sign(_scrollSpeed) * secondsElapsed;
             }
-            else if (input.LastMouseState.LeftButton == ButtonState.Pressed &&
-                     input.CurrentMouseState.LeftButton == ButtonState.Released)
-            {
-                DestroyMouseSpring();
-            }
-            //move anchor point
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && _mousePickSpring != null)
-            {
-                _mousePickSpring.WorldAttachPoint = point;
-            }
-        }
-
-        private void DestroyMouseSpring()
-        {
-            if (_mousePickSpring != null && _mousePickSpring.IsDisposed == false)
-            {
-                _mousePickSpring.Dispose();
-                _mousePickSpring = null;
-            }
-        }
-
-        private void CreateMouseSpring(Vector2 point)
-        {
-            _pickedGeom = _physicsSimulator.Collide(point);
-            if (_pickedGeom != null)
-            {
-                _mousePickSpring = SpringFactory.Instance.CreateFixedLinearSpring(_physicsSimulator,
-                    _pickedGeom.Body, _pickedGeom.Body.GetLocalPosition(point), point, 20, 10);
-            }
+            _scrollSpeed = _scrollSpeed.InLimits(-100.0f, 100.0f);
+            _scrollPosition += secondsElapsed * _scrollSpeed * 500.0f;
         }
 
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public override void Draw(GameTime gameTime)
-        {
+        public override void Draw(GameTime gameTime) {
             _spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            foreach (var obstacle in _obstacles) obstacle.Draw(_spriteBatch);
-            _ukkeli.Draw(_spriteBatch);
-            if (_mousePickSpring != null)
-            {
-                _lineBrush.Draw(_spriteBatch,
-                                _mousePickSpring.Body.GetWorldPosition(_mousePickSpring.BodyAttachPoint),
-                                _mousePickSpring.WorldAttachPoint);
+
+            Action<Texture2D, Vector2Fs /*pos*/, float /*rot*/, Vector2Fs /*origin*/> drawer = (tex, pos, rot, orig) => {
+                _spriteBatch.Draw(tex, pos.ToVector2Xna(-_scrollPosition), null, Color.White, rot, orig.ToVector2Xna(), 1, SpriteEffects.None, 0);
+            };
+
+            // Background is made always only of three tiles so we must alter which ones
+            int bgIndex = Convert.ToInt32( Math.Floor(_scrollPosition / ScreenSize.X) );
+            for (int i = bgIndex - 1; i <= bgIndex + 1; ++i) {
+                var flip = i % 2 == 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                _spriteBatch.Draw(_background, new Rectangle((int)-_scrollPosition + ScreenSize.X * i, 0, ScreenSize.X, ScreenSize.Y), null, Color.White, 0, Vector2Xna.Zero, flip, 0.0f);
             }
+
+
+            foreach (var obstacle in _obstacles) obstacle.Draw(drawer);
+            _ukkeli.Draw(drawer);            
             _spriteBatch.End();
         }
 
+        private float ManOnScreenX {
+            get { return _ukkeli.Position.X - _scrollPosition; }
+        }
     }
 }

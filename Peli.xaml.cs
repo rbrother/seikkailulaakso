@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,13 +32,17 @@ namespace Net.Brotherus.SeikkailuLaakso
             // Create land if no previous content
             if (this.scene.Children.Count == 0)
             {
-                for(int x = 0; x < 12; ++x) {
-                    this.scene.AddRectPolygon(900, x * 200, 200, 100);
-                }
+                CreateNewLand();
             }
             scene.MouseMove += scene_MouseMove;
             scene.MouseLeftButtonDown += scene_MouseLeftButtonDown;
             scene.MouseLeftButtonUp += scene_MouseLeftButtonUp;
+        }
+
+        private void CreateNewLand() {
+            for (int x = 0; x < 24; ++x) {
+                this.scene.AddRectPolygon(1100, x * 200, 200, 100);
+            }
         }
 
         private void scene_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -64,37 +69,41 @@ namespace Net.Brotherus.SeikkailuLaakso
         {
             get 
             { 
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SeikkailuMaa"); 
+                return Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "SeikkailuMaa"); 
             }
         }
 
-        private void PlayGame_Click(object sender, RoutedEventArgs e)
-        {
-            using (var game = new SeikkailuLaaksoGame())
-            {
+        public void StartGame() {
+            using (var game = new SeikkailuLaaksoGame()) {
                 int i = 1;
-                foreach (FrameworkElement sceneItem in scene.Children)
-                {
-                    var encoder = RenderToBitmap(sceneItem);
-                    string picFile = Path.Combine(SaveDir, "scene_item_" + i.ToString() + ".png");
-                    using (var picStream = new FileStream(picFile, FileMode.Create)) {
-                        encoder.Save(picStream);
+                var items = new System.Collections.ArrayList(scene.Children);
+                foreach (FrameworkElement sceneItem in items) {
+                    try {
+                        var encoder = RenderToBitmap(sceneItem);
+                        string picFile = Path.Combine(SaveDir, "scene_item_" + i.ToString() + ".png");
+                        using (var picStream = new FileStream(picFile, FileMode.Create)) {
+                            encoder.Save(picStream);
+                        }
+                        game.AddPolygonObstacle(picFile, Canvas.GetLeft(sceneItem), Canvas.GetTop(sceneItem));
+                        ++i;
+                    } catch (Exception ex) {
+                        Debug.WriteLine(ex);
+                        scene.Children.Remove(sceneItem);
                     }
-                    game.AddPolygonObstacle(picFile, Canvas.GetLeft(sceneItem), Canvas.GetTop(sceneItem));
-                    ++i;
                 }
                 game.Run();
             }
         }
 
+        private void PlayGame_Click(object sender, RoutedEventArgs e)
+        {
+            StartGame();
+        }
+
         [STAThread]
         public static void Main()
         {
-            //new Application().Run(new AlkuIkkuna());
-
-            new Application().Run(new Peli());
-
-            //new Peli().PlayGame_Click(null, null);
+            new Application().Run(new AlkuIkkuna());
         }
 
         private static PngBitmapEncoder RenderToBitmap(FrameworkElement sceneItem)
@@ -114,7 +123,7 @@ namespace Net.Brotherus.SeikkailuLaakso
             return encoder;
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
             if (!Directory.Exists(SaveDir)) Directory.CreateDirectory(SaveDir);
             using (var stream = new FileStream(this.SaveFileName, FileMode.Create))

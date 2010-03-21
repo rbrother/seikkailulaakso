@@ -4,6 +4,8 @@ using FarseerGames.FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Net.Brotherus.SeikkailuLaakso;
+using Vector2Fs = FarseerGames.FarseerPhysics.Mathematics.Vector2;
+using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus
 {
@@ -25,33 +27,19 @@ namespace Net.Brotherus
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10);
             IsFixedTimeStep = true;
 
-            SetFullScreen(false);
+            _graphics.PreferredBackBufferWidth = GameScreen.ScreenSize.X;
+            _graphics.PreferredBackBufferHeight = GameScreen.ScreenSize.Y;
+            _graphics.IsFullScreen = true;
 
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             _gameScreen = new GameScreen(this);
             Components.Add(_gameScreen);
         }
 
-        public void SetFullScreen(bool fullScreen)
-        {
-            if (fullScreen)
-            {
-                _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-                _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-                _graphics.IsFullScreen = true;
-            }
-            else
-            {
-                _graphics.PreferredBackBufferWidth = 1600;
-                _graphics.PreferredBackBufferHeight = 1024;
-                _graphics.IsFullScreen = false;
-            }
-        }
-
         public void AddPolygonObstacle(string picFile, double x, double y)
         {
-            _gameScreen.AddObstacle(picFile, new Vector2((float)x, (float)y)); 
+            _gameScreen.AddObstacle(picFile, new Vector2Fs((float)x, (float)y)); 
         }
 
         /// <summary>
@@ -72,7 +60,7 @@ namespace Net.Brotherus
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            _gameScreen.GraphicsDevice.Clear(new Color(200,200,200));
+            _gameScreen.GraphicsDevice.Clear(new Color(0,0,0));
             base.Draw(gameTime);
         }
 

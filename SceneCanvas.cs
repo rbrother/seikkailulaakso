@@ -22,7 +22,7 @@ namespace Net.Brotherus.SeikkailuLaakso
         private List<Point> objectPoints;
         private List<Line> tempLines;
 
-        private const double POLYGON_SIDE = 25.0;
+        private const double POLYGON_SIDE = 40.0;
 
         public SceneCanvas()
         {
@@ -41,7 +41,7 @@ namespace Net.Brotherus.SeikkailuLaakso
         {
             if (drawing)
             {
-                Point newPos = e.GetPosition(this);
+                Point newPos = CoarsePosition( e.GetPosition(this) );
                 var distanceFromLast = Distance(newPos, objectPoints.Last());
                 if (distanceFromLast > POLYGON_SIDE)
                 {
@@ -53,6 +53,14 @@ namespace Net.Brotherus.SeikkailuLaakso
                     this.tempLines.Add(line);
                 }
             }
+        }
+
+        private static Point CoarsePosition(Point pos) {
+            return new Point(Quantize(pos.X), Quantize(pos.Y));
+        }
+
+        private static int Quantize(double val) {
+            return ( Convert.ToInt32(val) / 20) * 20;
         }
 
         internal void EndDrawing(MouseButtonEventArgs e)
