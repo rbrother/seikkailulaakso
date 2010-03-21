@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B8114FBF-96BC-48D7-8DF2-085D380CA2C1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Farseer</RootNamespace>
+    <AssemblyName>Farseer</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\AABB.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\BruteForceCollider.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\CollisionIdGenerator.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\Contact.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\ContactId.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\ContactList.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\DistanceGrid.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\Feature.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\Geom.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\GeomPairBitmap.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\RayHelper.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\SAT.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\SelectiveSweepCollider.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\SpatialHashCollider.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\SweepAndPruneCollider.cs" />
+    <Compile Include="SourceFiles\FP2.1\Collisions\Vertices.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\AABBFluidContainer.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\Controller.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\ControllerList.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\FluidDragController.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\GravityController.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\InactivityController.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\ScalingController.cs" />
+    <Compile Include="SourceFiles\FP2.1\Controllers\WaveController.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Arbiter.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\ArbiterList.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Body.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Curve.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\AngleJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\AngleLimitJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\FixedAngleJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\FixedAngleLimitJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\FixedRevoluteJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\Joint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\JointList.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\PinJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\RevoluteJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\SliderJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Joints\WeldJoint.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Path.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Springs\AngleSpring.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Springs\FixedAngleSpring.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Springs\FixedLinearSpring.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Springs\LinearSpring.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Springs\Spring.cs" />
+    <Compile Include="SourceFiles\FP2.1\Dynamics\Springs\SpringList.cs" />
+    <Compile Include="SourceFiles\FP2.1\Enums.cs" />
+    <Compile Include="SourceFiles\FP2.1\Factories\BodyFactory.cs" />
+    <Compile Include="SourceFiles\FP2.1\Factories\ComplexFactory.cs" />
+    <Compile Include="SourceFiles\FP2.1\Factories\GeomFactory.cs" />
+    <Compile Include="SourceFiles\FP2.1\Factories\JointFactory.cs" />
+    <Compile Include="SourceFiles\FP2.1\Factories\SpringFactory.cs" />
+    <Compile Include="SourceFiles\FP2.1\GenericList.cs" />
+    <Compile Include="SourceFiles\FP2.1\Interfaces\IBroadPhaseCollider.cs" />
+    <Compile Include="SourceFiles\FP2.1\Interfaces\IFluidContainer.cs" />
+    <Compile Include="SourceFiles\FP2.1\Interfaces\IIsDisposable.cs" />
+    <Compile Include="SourceFiles\FP2.1\Interfaces\INarrowPhaseCollider.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\BilinearInterpolator.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\Calculator.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\CircularInterpolator.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\ConvertUnits.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\MathHelper.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\Matrix.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\Vector2.cs" />
+    <Compile Include="SourceFiles\FP2.1\Mathematics\Vector3.cs" />
+    <Compile Include="SourceFiles\FP2.1\PhysicsSimulator.cs" />
+    <Compile Include="SourceFiles\FP2.1\Pool.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
