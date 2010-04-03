@@ -97,7 +97,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SceneCanvas.cs" />
     <Compile Include="UkkelinMuokkaus.xaml.cs">
       <DependentUpon>UkkelinMuokkaus.xaml</DependentUpon>
     </Compile>

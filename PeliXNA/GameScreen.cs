@@ -38,7 +38,7 @@ namespace Net.Brotherus
         private Texture2D _background;
 
 
-        private float TILE_SIZE = 60.0f;
+        private static readonly float TILE_SIZE = 60.0f;
         private Dictionary<string, Texture2D> textures;
 
         public GameScreen(Game game) : base(game)
@@ -57,6 +57,14 @@ namespace Net.Brotherus
         }
 
         private Texture2D SquareTexture { get { return GetTexture("Tiles/tile-60.png"); } }
+
+        private static Point CoarsePosition(Point pos) {
+            return new Point(Quantize(pos.X), Quantize(pos.Y));
+        }
+
+        private static int Quantize(int val) {
+            return Convert.ToInt32( Math.Floor(val / TILE_SIZE) * TILE_SIZE );
+        }
 
         /// <summary>
         /// Load your graphics content.
