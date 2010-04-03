@@ -14,7 +14,6 @@ namespace Net.Brotherus.SeikkailuLaakso
 {
     public class PolygonObstacle
     {
-        private string _textureFile;
         private Vector2Fs _position;
 
         private Geom _geom;
@@ -26,19 +25,11 @@ namespace Net.Brotherus.SeikkailuLaakso
         /// </summary>
         /// <param name="position">top-left position</param>
         /// <param name="textureFile"></param>
-        public PolygonObstacle(Vector2Fs position, string textureFile)
+        public PolygonObstacle(Vector2Fs position, Texture2D texture, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
         {
             _position = position;
-            _textureFile = textureFile;
-        }
+            _texture = texture;
 
-        /// <summary>
-        /// This cannot be done in constructor since graphicsdevice and physicssimulator don't exist yet then.
-        /// Load is called later
-        /// </summary>
-        public void Load(GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator)
-        {
-            _texture = Texture2D.FromFile(graphicsDevice, _textureFile);
             uint[] textureData = new uint[_texture.Width * _texture.Height];
             _texture.GetData<uint>(textureData);
             Vertices poly = Vertices.CreatePolygon(textureData, _texture.Width, _texture.Height);
@@ -49,7 +40,7 @@ namespace Net.Brotherus.SeikkailuLaakso
             // Don't use Geom factory: it shifts the vertices according to center-of-mass
             _geom = new Geom(_body, poly, Vector2Fs.Zero, 0, 1.0f);
             _geom.RestitutionCoefficient = 0.0f;
-            physicsSimulator.Add(_geom);            
+            physicsSimulator.Add(_geom);
         }
 
         public void Draw(Action<Texture2D, Vector2Fs /*pos*/, float /*rot*/, Vector2Fs /*origin*/> drawer)

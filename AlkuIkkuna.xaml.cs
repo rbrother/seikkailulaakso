@@ -19,6 +19,11 @@ namespace Net.Brotherus.SeikkailuLaakso
     /// </summary>
     public partial class AlkuIkkuna : Window
     {
+        [STAThread]
+        public static void Main() {
+            new Application().Run(new AlkuIkkuna());
+        }
+
         public AlkuIkkuna()
         {
             InitializeComponent();
@@ -26,7 +31,9 @@ namespace Net.Brotherus.SeikkailuLaakso
 
         private void Aloitetaan(object sender, RoutedEventArgs e)
         {
-            new Peli().Show();
+            using (var game = new SeikkailuLaaksoGame()) {
+                game.Run();
+            }
         }
 
         private void UkkelinMuokkaus(object sender, RoutedEventArgs e) {

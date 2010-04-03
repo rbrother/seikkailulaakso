@@ -37,17 +37,26 @@ namespace Net.Brotherus
 
         private Texture2D _background;
 
+
+        private float TILE_SIZE = 60.0f;
+        private Dictionary<string, Texture2D> textures;
+
         public GameScreen(Game game) : base(game)
         {
             _contentManager = new ContentManager(game.Services);
             _physicsSimulator = new PhysicsSimulator(GRAVITY);
             _obstacles = new List<PolygonObstacle>();
+            this.textures = new Dictionary<string, Texture2D>();
         }
 
-        public void AddObstacle(string picFile, Vector2Fs position)
-        {
-             _obstacles.Add(new PolygonObstacle(position, picFile));
+        private Texture2D GetTexture(string fileName) {
+            if (!this.textures.ContainsKey(fileName)) {
+                this.textures[fileName] = Texture2D.FromFile(GraphicsDevice, fileName);
+            }
+            return this.textures[fileName];
         }
+
+        private Texture2D SquareTexture { get { return GetTexture("Tiles/tile-60.png"); } }
 
         /// <summary>
         /// Load your graphics content.
@@ -59,11 +68,22 @@ namespace Net.Brotherus
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _lineBrush.Load(GraphicsDevice);
             _ukkeli = new UkkeliSimple(new Vector2Fs(150, 800), GraphicsDevice, _physicsSimulator);
-            foreach (var obstacle in _obstacles)
-            {                
-                obstacle.Load(GraphicsDevice, _physicsSimulator);
+            AddGound();
+        }
+
+        private void AddGound() {
+            float x = 0.0f;
+            float y = ScreenSize.Y - TILE_SIZE;
+            while (x < 2000.0f) {
+                AddObstacle(SquareTexture, new Vector2Fs(x, y));
+                x += TILE_SIZE;
             }
         }
+
+        public void AddObstacle(Texture2D texture, Vector2Fs position) {
+            _obstacles.Add(new PolygonObstacle(position, texture, GraphicsDevice, _physicsSimulator));
+        }
+
 
         /// <summary>
         /// Unload your graphics content.

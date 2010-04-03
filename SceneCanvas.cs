@@ -18,41 +18,11 @@ namespace Net.Brotherus.SeikkailuLaakso
 {
     public class SceneCanvas : Canvas
     {
-        private bool drawing = false;
-        private List<Point> objectPoints;
-        private List<Line> tempLines;
-
-        private const double POLYGON_SIDE = 40.0;
+        private const double TILE_SIZE = 60.0;
 
         public SceneCanvas()
         {
             this.Background = new SolidColorBrush(Colors.Yellow);
-        }
-
-        internal void StartDrawing(MouseButtonEventArgs e)
-        {
-            drawing = true;
-            this.objectPoints = new List<Point>();
-            this.tempLines = new List<Line>();
-            this.objectPoints.Add(e.GetPosition(this));
-        }
-
-        internal void ContinueDrawing(MouseEventArgs e)
-        {
-            if (drawing)
-            {
-                Point newPos = CoarsePosition( e.GetPosition(this) );
-                var distanceFromLast = Distance(newPos, objectPoints.Last());
-                if (distanceFromLast > POLYGON_SIDE)
-                {
-                    var line = new Line { X1 = objectPoints.Last().X, Y1 = objectPoints.Last().Y, X2 = newPos.X, Y2 = newPos.Y };
-                    line.Stroke = new SolidColorBrush(Colors.Black);
-                    line.StrokeThickness = 2;
-                    objectPoints.Add(newPos);
-                    this.Children.Add(line);
-                    this.tempLines.Add(line);
-                }
-            }
         }
 
         private static Point CoarsePosition(Point pos) {
@@ -61,46 +31,6 @@ namespace Net.Brotherus.SeikkailuLaakso
 
         private static int Quantize(double val) {
             return ( Convert.ToInt32(val) / 20) * 20;
-        }
-
-        internal void EndDrawing(MouseButtonEventArgs e)
-        {
-            if (drawing)
-            {
-                MakeObject();
-                this.drawing = false;
-                this.objectPoints = null;
-            }
-        }
-
-        private void MakeObject()
-        {
-            RemoveTempLines();
-            double minX = objectPoints.Min(p => p.X);
-            double minY = objectPoints.Min(p => p.Y);
-            var poly = CreateDefaultPolygon();
-            poly.Points = new PointCollection(this.objectPoints.Select(p => new Point(p.X - minX, p.Y - minY))) ;            
-            SetTop(poly, minY);
-            SetLeft(poly, minX);
-            this.Children.Add(poly);
-        }
-
-        public void AddRectPolygon(double top, double left, double width, double height)
-        {
-            var poly = CreateDefaultPolygon();
-            poly.Points.Add(new Point(0, 0));
-            poly.Points.Add(new Point(width, 0));
-            poly.Points.Add(new Point(width, height));
-            poly.Points.Add(new Point(0, height));
-            SetTop(poly, top);
-            SetLeft(poly, left);
-            this.Children.Add(poly);
-        }
-
-        private void RemoveTempLines() {
-            foreach (var line in this.tempLines) {
-                this.Children.Remove(line);
-            }
         }
 
         #region STATIC

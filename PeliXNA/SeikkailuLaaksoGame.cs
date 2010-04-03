@@ -9,9 +9,6 @@ using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class SeikkailuLaaksoGame : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -29,17 +26,12 @@ namespace Net.Brotherus
 
             _graphics.PreferredBackBufferWidth = GameScreen.ScreenSize.X;
             _graphics.PreferredBackBufferHeight = GameScreen.ScreenSize.Y;
-            _graphics.IsFullScreen = false;
+            _graphics.IsFullScreen = true;
 
-            IsMouseVisible = false;
+            IsMouseVisible = true;
 
             _gameScreen = new GameScreen(this);
             Components.Add(_gameScreen);
-        }
-
-        public void AddPolygonObstacle(string picFile, double x, double y)
-        {
-            _gameScreen.AddObstacle(picFile, new Vector2Fs((float)x, (float)y)); 
         }
 
         /// <summary>
