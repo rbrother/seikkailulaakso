@@ -43,28 +43,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\detailsFont.spritefont">
-      <Name>detailsFont</Name>
+    <Compile Include="SmallFont.spritefont">
+      <Name>SmallFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="Fonts\diagnosticFont.spritefont">
-      <Name>diagnosticFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\frameRateCounterFont.spritefont">
-      <Name>frameRateCounterFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\gamefont.spritefont">
-      <Name>gamefont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\menufont.spritefont">
-      <Name>menufont</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BardTitle.spritefont">
+      <Name>BardTitle</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

@@ -15,21 +15,34 @@ using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus {
 
-    public class UkkeliSimple : CircleBodyGeom {
+    public class UkkeliSimple {
+
+        private Vector2Fs _origin;
+        private Body _body;
+        private Geom _geom;
+        private GraphicsDevice _graphicsDevice;
+        private PhysicsSimulator _physicsSimulator;
 
         private const float MAX_WALK_SPEED = 300.0f;
         private HashSet<Geom> _collidingGeoms = new HashSet<Geom>();
 
-        private PhysicsSimulator _physicsSimulator;
+        private int Radius { get { return 42; } }
+
         private bool _wantJump;
         private DateTime _jumpPressed;
 
-        public UkkeliSimple(Vector2Fs position, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator):
-            base(position + new Vector2Fs(0, 32), 32, 0.2f, graphicsDevice, physicsSimulator)
-        {
+        public UkkeliSimple(Vector2Fs position, float tileSize, GraphicsDevice graphicsDevice, PhysicsSimulator physicsSimulator) {
             _physicsSimulator = physicsSimulator;
+            _graphicsDevice = graphicsDevice;
+
+            _origin = new Vector2Fs(44, 106);
+            _body = BodyFactory.Instance.CreateCircleBody(physicsSimulator, Radius, 0.2f);
+            _body.Position = position;
+
+
             Geom.OnCollision = HandleCollision;
             Geom.OnSeparation = HandleSeparation;
+
         }
 
         internal void HandleKeyboardInput(InputState input, GameTime gameTime) {
@@ -97,6 +110,53 @@ namespace Net.Brotherus {
         private void Walk(float dir) {
             Body.ApplyForce(new Vector2Fs(200.0f * dir, 0));
         }
+
+        public float FrictionCoefficient {
+            get { return Geom.FrictionCoefficient; }
+            set { Geom.FrictionCoefficient = value; }
+        }
+
+        public Body Body { get { return _body; } }
+
+        public Geom Geom { 
+            get {
+                if (_geom == null) {
+                    _geom = GeomFactory.Instance.CreateCircleGeom(_physicsSimulator, Body, Radius, 32);
+                    _geom.RestitutionCoefficient = 0.0f;
+                    _geom.FrictionCoefficient = 1.0f;
+                    _geom.CollisionCategories = CollisionCategory.All;
+                    _geom.CollidesWith = CollisionCategory.All;
+                }
+                return _geom; 
+            } 
+        }
+
+        public Vector2Fs Position { get { return Body.Position; } }
+
+        public float AngularVelocity {
+            get { return Body.AngularVelocity; }
+            set { Body.AngularVelocity = value; }
+        }
+
+        public Vector2Fs Velocity {
+            get { return Body.LinearVelocity; }
+        }
+
+        public bool IsStatic { set { Body.IsStatic = value; } }
+
+        public int CollisionGroup { set { Geom.CollisionGroup = value; } }
+
+        public float RotationDeg {
+            get { return (float) Body.Rotation.ToDegrees(); }
+            set { Body.Rotation = value.ToRadians(); }
+        }
+
+        public float RotationRad { get { return Body.Rotation; } }
+
+        public void Draw(Action<string, Vector2Fs /*pos*/, float /*rot*/, Vector2Fs /*origin*/> drawer) {
+            drawer("Content/ukko.png", Body.Position, 0, _origin);
+        }
+
 
     } // class
 
