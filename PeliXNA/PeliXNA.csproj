@@ -91,9 +91,14 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="VistaBridgeLibrary, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\VistaBridge\vistabridgelibrary\bin\Debug\VistaBridgeLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +108,6 @@
     <Compile Include="Helpers\MathExt.cs" />
     <Compile Include="Objects\Obstacle.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
-    <Compile Include="DrawingSystem\LineBrush.cs" />
     <Compile Include="Primitives\RectangleBodyGeom.cs" />
     <Compile Include="SeikkailuLaaksoGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,6 +115,7 @@
     <Compile Include="GameScreen.cs" />
     <Compile Include="Objects\Tuhatjalkainen.cs" />
     <Compile Include="Objects\UkkeliSimple.cs" />
+    <Compile Include="TextureCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

@@ -1,6 +1,12 @@
 *.suo
+*.csproj.user
 PeliXNA.dll
 PeliXNA.pdb
 PeliXNA.csproj.FileListAbsolute.txt
 obj
 bin
+*.user
+
+
+
+SeikkailuLaakso.csproj.user

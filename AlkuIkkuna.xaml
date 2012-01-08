@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Seikkailu Laakso" Height="788" Width="1024">
     <Canvas>
-        <Image Canvas.Left="0" Canvas.Top="0" Width="1024" Height="768" Source="file:///C:/work/SeikkailuLaakso/alkukuva.png" />
+        <Image Canvas.Left="0" Canvas.Top="0" Width="1024" Height="768" Source="file:///C:/data/programming/SeikkailuLaakso/alkukuva.png" />
         <Button Canvas.Left="20" Canvas.Top="190" FontSize="24" Click="Aloitetaan" IsDefault="True">Aloita</Button>
         <Button Canvas.Left="113" Canvas.Top="190" FontSize="24" Click="UkkelinMuokkaus" Height="37.923" Width="199">Ukkelin muokkaus</Button>
     </Canvas>

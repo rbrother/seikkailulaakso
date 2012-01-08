@@ -18,33 +18,65 @@ namespace Net.Brotherus.SeikkailuLaakso
     {
         private Geom _geom;
         private Body _body;
-        private string _textureName;
-        private ITextureCache _textureCache;
+        private Texture2D _texture;
+        private int _width;
+        private int _rotate;
+        private bool _flip;
+        private bool _scroll; // Wether obstacle should participate in scrolling or be fixed one (to screen)
+        private System.Drawing.Color _color;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="position">top-left position</param>
-        /// <param name="textureFile"></param>
-        public PolygonObstacle(Vector2Fs position, string textureName, PhysicsSimulator physicsSimulator, ITextureCache textureCache) {
-            _textureName = textureName;
-            _textureCache = textureCache;
+        public PolygonObstacle(Vector2Fs position, int width, int rotate, bool flip, PhysicsSimulator physicsSimulator, TextureGenerator textureCache, bool scroll) :
+            this(position, width, rotate, flip, physicsSimulator, textureCache, System.Drawing.Color.FromArgb(200,80,20), scroll) {
+        }
 
+        public PolygonObstacle(Vector2Fs position, int width, int rotate, bool flip, PhysicsSimulator physicsSimulator, TextureGenerator textureCache, System.Drawing.Color color, bool scroll) :
+            this(position, width, rotate, flip, textureCache.TriangleTile(width, rotate, flip, color), physicsSimulator, scroll) {
+            _color = color;
+        }
+
+        private PolygonObstacle(Vector2Fs position, int width, int rotate, bool flip, Texture2D texture, PhysicsSimulator physicsSimulator, bool scroll) {
+            _scroll = scroll;
+            _width = width;
+            _rotate = rotate;
+            _flip = flip;
+            _texture = texture;
             _body = CreateBody(position, physicsSimulator);
             _geom = CreateGeom(_body, PolygonVertices);
-
             physicsSimulator.Add(_geom);
         }
 
-        public PolygonObstacle(XElement data, PhysicsSimulator physicsSimulator, ITextureCache textureCache) :
+        public PolygonObstacle(XElement data, PhysicsSimulator physicsSimulator, TextureGenerator textureCache) :
             this(
                 new Vector2Fs(
                     Convert.ToSingle(data.Attribute("x").Value), 
                     Convert.ToSingle(data.Attribute("y").Value)
-                ), 
-                data.Attribute("texture").Value, 
-                physicsSimulator, textureCache
+                ),
+                Convert.ToInt32(data.Attribute("width").Value),
+                Convert.ToInt32(data.Attribute("rotate").Value),
+                Convert.ToBoolean(data.Attribute("flip").Value),
+                physicsSimulator, textureCache, XmlToColor(data.Element("Color")), true
             ) {
+        }
+
+        public PolygonObstacle Clone( Vector2Fs newPos, System.Drawing.Color color, PhysicsSimulator physicsSimulator, TextureGenerator textureGenerator ) {
+            return new PolygonObstacle(newPos, _width, _rotate, _flip, physicsSimulator, textureGenerator, color, true);
+        }
+
+        public int Width { get { return _texture.Width; } }
+
+        public int Height { get { return _texture.Height; } }
+
+        public bool Scroll { get { return _scroll; } }
+
+        public System.Drawing.Color Color { get { return _color; } }
+
+        private static System.Drawing.Color XmlToColor(XElement color) {
+            if (color == null) return System.Drawing.Color.Brown;
+            return System.Drawing.Color.FromArgb(
+                Convert.ToInt32( color.Attribute("red").Value ),
+                Convert.ToInt32( color.Attribute("green").Value ),
+                Convert.ToInt32( color.Attribute("blue").Value )
+                );
         }
 
         public XElement Xml {
@@ -52,13 +84,22 @@ namespace Net.Brotherus.SeikkailuLaakso
                 return new XElement("Obstacle",
                     new XAttribute("x", _body.Position.X),
                     new XAttribute("y", _body.Position.Y),
-                    new XAttribute("texture", _textureName)
+                    new XAttribute("width", _width),
+                    new XAttribute("rotate", _rotate),
+                    new XAttribute("flip", _flip),
+                    new XElement("Color", 
+                        new XAttribute("red", Color.R), 
+                        new XAttribute("green", Color.G), 
+                        new XAttribute("blue", Color.B)
+                    )
                 );
             }
         }
 
         private Texture2D Texture {
-            get { return _textureCache.GetTexture(_textureName); }
+            get {
+                return _texture; 
+            }
         }
 
         private Vertices PolygonVertices {
@@ -95,9 +136,9 @@ namespace Net.Brotherus.SeikkailuLaakso
 
         public Geom Geom { get { return _geom; } }
 
-        public void Draw(Action<string, Vector2Fs /*pos*/, float /*rot*/, Vector2Fs /*origin*/> drawer)
+        public void Draw(Action<Texture2D, Vector2Fs /*pos*/, float /*rot*/, Vector2Fs /*origin*/> drawer)
         {
-            drawer(_textureName, _body.Position, 0, Vector2Fs.Zero);
+            drawer(_texture, _body.Position, 0, Vector2Fs.Zero);
         }
     }
 }
