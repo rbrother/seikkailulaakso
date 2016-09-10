@@ -2,64 +2,77 @@
 using System.Xml.Linq;
 using System.Linq;
 using System.Collections.Generic;
-using FarseerGames.FarseerPhysics;
-using FarseerGames.FarseerPhysics.Collisions;
-using FarseerGames.FarseerPhysics.Dynamics;
-using FarseerGames.FarseerPhysics.Factories;
-using FarseerGames.GettingStarted.DrawingSystem;
+using FarseerPhysics;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.PolygonManipulation;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Vector2Fs = FarseerGames.FarseerPhysics.Mathematics.Vector2;
-using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus.SeikkailuLaakso
 {
     public class PolygonObstacle
     {
-        private Geom _geom;
         private Body _body;
         private Texture2D _texture;
         private int _width;
         private int _rotate;
         private bool _flip;
         private bool _scroll; // Wether obstacle should participate in scrolling or be fixed one (to screen)
-        private System.Drawing.Color _color;
+        private Color _color;
 
-        public PolygonObstacle(Vector2Fs position, int width, int rotate, bool flip, PhysicsSimulator physicsSimulator, TextureGenerator textureCache, bool scroll) :
-            this(position, width, rotate, flip, physicsSimulator, textureCache, System.Drawing.Color.FromArgb(200,80,20), scroll) {
+        public PolygonObstacle(Vector2 position, int width, int rotate, bool flip, World World, bool scroll) :
+            this(position, width, rotate, flip, World, new Color(200,80,20), scroll) {
         }
 
-        public PolygonObstacle(Vector2Fs position, int width, int rotate, bool flip, PhysicsSimulator physicsSimulator, TextureGenerator textureCache, System.Drawing.Color color, bool scroll) :
-            this(position, width, rotate, flip, textureCache.TriangleTile(width, rotate, flip, color), physicsSimulator, scroll) {
+        public PolygonObstacle(Vector2 position, int width, int rotate, bool flip, World World, Color color, bool scroll) :
+            this(position, width, rotate, flip, ObstacleVertices(width, rotate, flip), World, scroll) {
             _color = color;
         }
 
-        private PolygonObstacle(Vector2Fs position, int width, int rotate, bool flip, Texture2D texture, PhysicsSimulator physicsSimulator, bool scroll) {
+        private static Vertices ObstacleVertices(int width, float rotate, bool flip) {
+            var corners = flip ? new Vector2[] { 
+                new Vector2(0f,0f),
+                new Vector2(width*60f, -60f),
+                new Vector2(width*60f, 0f),
+            } : new Vector2[] { 
+                new Vector2(0f,0f),
+                new Vector2(width*60f, 0f),
+                new Vector2(width*60f, 60f),
+            };
+            var vert = new Vertices(corners);
+            vert.Rotate(rotate.ToRadians());
+            var flipVect = new Vector2(1f, -1f);
+            return vert;
+        }
+
+        private PolygonObstacle(Vector2 position, int width, int rotate, bool flip, Vertices vertices, World World, bool scroll) {
             _scroll = scroll;
             _width = width;
             _rotate = rotate;
             _flip = flip;
-            _texture = texture;
-            _body = CreateBody(position, physicsSimulator);
-            _geom = CreateGeom(_body, PolygonVertices);
-            physicsSimulator.Add(_geom);
+            _texture = AssetCreator.Instance.TextureFromVertices(vertices, MaterialType.Squares, new Color(255, 0, 0), 4f);
+            _body = CreateBody(position, World);
+            FixtureFactory.AttachPolygon(vertices, 0.1f, _body);
         }
 
-        public PolygonObstacle(XElement data, PhysicsSimulator physicsSimulator, TextureGenerator textureCache) :
+        public PolygonObstacle(XElement data, World World) :
             this(
-                new Vector2Fs(
+                new Vector2(
                     Convert.ToSingle(data.Attribute("x").Value), 
                     Convert.ToSingle(data.Attribute("y").Value)
                 ),
                 Convert.ToInt32(data.Attribute("width").Value),
                 Convert.ToInt32(data.Attribute("rotate").Value),
                 Convert.ToBoolean(data.Attribute("flip").Value),
-                physicsSimulator, textureCache, XmlToColor(data.Element("Color")), true
+                World, XmlToColor(data.Element("Color")), true
             ) {
         }
 
-        public PolygonObstacle Clone( Vector2Fs newPos, System.Drawing.Color color, PhysicsSimulator physicsSimulator, TextureGenerator textureGenerator ) {
-            return new PolygonObstacle(newPos, _width, _rotate, _flip, physicsSimulator, textureGenerator, color, true);
+        public PolygonObstacle Clone( Vector2 newPos, Color color, World World ) {
+            return new PolygonObstacle(newPos, _width, _rotate, _flip, World, color, true);
         }
 
         public int Width { get { return _texture.Width; } }
@@ -68,11 +81,11 @@ namespace Net.Brotherus.SeikkailuLaakso
 
         public bool Scroll { get { return _scroll; } }
 
-        public System.Drawing.Color Color { get { return _color; } }
+        public Color Color { get { return _color; } }
 
-        private static System.Drawing.Color XmlToColor(XElement color) {
-            if (color == null) return System.Drawing.Color.Brown;
-            return System.Drawing.Color.FromArgb(
+        private static Color XmlToColor(XElement color) {
+            if (color == null) return new Color(255,128,0);
+            return new Color(
                 Convert.ToInt32( color.Attribute("red").Value ),
                 Convert.ToInt32( color.Attribute("green").Value ),
                 Convert.ToInt32( color.Attribute("blue").Value )
@@ -102,43 +115,22 @@ namespace Net.Brotherus.SeikkailuLaakso
             }
         }
 
-        private Vertices PolygonVertices {
-            get {
-                uint[] textureData = new uint[Texture.Width * Texture.Height];
-                Texture.GetData<uint>(textureData);
-                return Vertices.CreatePolygon(textureData, Texture.Width, Texture.Height);
-            }
-        }
-
-        private static Body CreateBody(Vector2Fs position, PhysicsSimulator physicsSimulator) {
-            var b = BodyFactory.Instance.CreateBody(physicsSimulator, 1, 1); // dummy moment of inertia and mass since static
-            b.Position = position;
+        private static Body CreateBody(Vector2 position, World World) {
+            var b = BodyFactory.CreateBody(World, position); // dummy moment of inertia and mass since static
             b.IsStatic = true;
             return b;
         }
 
-        private static Geom CreateGeom(Body b, Vertices poly) {
-            // Don't use Geom factory: it shifts the vertices according to center-of-mass
-            var g = new Geom(b, poly, Vector2Fs.Zero, 0, 1.0f);
-            g.RestitutionCoefficient = 0.0f;
-            return g;
-        }
-
-        public Vector2Fs Position {
+        public Vector2 Position {
             get { return _body.Position; }
-            set { 
-                _body.Position = value;
-                _geom.SetBody(_body);
-            }
+            set { _body.Position = value; }
         }
 
         public Body Body { get { return _body; } }
 
-        public Geom Geom { get { return _geom; } }
-
-        public void Draw(Action<Texture2D, Vector2Fs /*pos*/, float /*rot*/, Vector2Fs /*origin*/> drawer)
+        public void Draw(Action<Texture2D, Vector2 /*pos*/, float /*rot*/, Vector2 /*origin*/> drawer)
         {
-            drawer(_texture, _body.Position, 0, Vector2Fs.Zero);
+            drawer(_texture, _body.Position, 0, Vector2.Zero);
         }
     }
 }

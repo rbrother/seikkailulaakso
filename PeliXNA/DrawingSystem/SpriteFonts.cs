@@ -10,8 +10,8 @@ namespace Net.Brotherus
 
         public SpriteFonts(ContentManager contentManager)
         {
-            _smallFont = contentManager.Load<SpriteFont>("Content/SmallFont");
-            _bardTitle = contentManager.Load<SpriteFont>("Content/BardTitle");
+            _smallFont = contentManager.Load<SpriteFont>("SeikkailuLaaksoContent/SmallFont");
+            _bardTitle = contentManager.Load<SpriteFont>("SeikkailuLaaksoContent/BardTitle");
         }
 
         public SpriteFont SmallFont { get { return _smallFont; } }

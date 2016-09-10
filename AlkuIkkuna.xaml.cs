@@ -31,9 +31,8 @@ namespace Net.Brotherus.SeikkailuLaakso
 
         private void Aloitetaan(object sender, RoutedEventArgs e)
         {
-            using (var game = new SeikkailuLaaksoGame()) {
-                game.Run();
-            }
+            var game = new SeikkailuLaaksoGame();
+            game.Run();
         }
 
         private void UkkelinMuokkaus(object sender, RoutedEventArgs e) {

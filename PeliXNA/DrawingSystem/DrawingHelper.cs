@@ -22,7 +22,7 @@ namespace FarseerGames.GettingStarted.DrawingSystem
                                                        int borderWidth, int borderInnerTransitionWidth,
                                                        int borderOuterTransitionWidth, Color color, Color borderColor)
         {
-            Texture2D texture2D = new Texture2D(graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
+            Texture2D texture2D = new Texture2D(graphicsDevice, width, height);
 
             int y = -1;
             int j;

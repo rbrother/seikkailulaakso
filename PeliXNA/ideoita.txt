@@ -1,0 +1,9 @@
+﻿Blokkien ulkonäkö:
+
+* Tavallista hiekkaa: keltainen
+
+* Juoksu Hiekka: keltaiset + pisteitä
+
+* Myrkky / happo: Violetteja koukeroita viivoja
+
+* Laava: Koukeroita oransseja viivoja

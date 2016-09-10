@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using FarseerGames.FarseerPhysics;
+using FarseerPhysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Net.Brotherus.SeikkailuLaakso;
-using Vector2Fs = FarseerGames.FarseerPhysics.Mathematics.Vector2;
-using Vector2Xna = Microsoft.Xna.Framework.Vector2;
 
 namespace Net.Brotherus
 {
